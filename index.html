@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="only light">
+  <meta name="theme-color" content="#fbe3f1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>a very important question</title>
+  <meta name="description" content="for stink only">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="a very important question">
+  <meta property="og:description" content="for stink only">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="a very important question">
+  <meta name="twitter:description" content="for stink only">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%9C%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@500;700;800&display=swap">
+  <style>
+    :root {
+      color-scheme: only light;
+      --ink: #4a2b5f;
+      --ink-soft: #82679a;
+      --pink: #ff8cc8;
+      --pink-deep: #ec5ea6;
+      --lilac: #c4a8ff;
+      --purple: #9774f0;
+      --card: rgba(255, 255, 255, 0.88);
+      --shadow: 0 10px 26px rgba(124, 69, 160, 0.14), 0 2px 6px rgba(124, 69, 160, 0.08);
+      --shadow-lg: 0 24px 54px rgba(124, 69, 160, 0.18), 0 4px 12px rgba(124, 69, 160, 0.08);
+      --ease-out: cubic-bezier(0.22, 0.8, 0.24, 1);
+      --hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+      --body: "Nunito", ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      background: #fbe6f3;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--body);
+      color: var(--ink);
+      text-transform: lowercase;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    /* soft background: a pastel wash with a few slow-drifting blobs */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      background: linear-gradient(165deg, #ffe8f4 0%, #f7e9ff 55%, #ebe2ff 100%);
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .blob-1 { width: 340px; height: 340px; top: -110px; left: -120px; background: radial-gradient(circle, rgba(255, 170, 214, 0.75), rgba(255, 170, 214, 0) 68%); }
+    .blob-2 { width: 380px; height: 380px; bottom: -140px; right: -140px; background: radial-gradient(circle, rgba(196, 168, 255, 0.7), rgba(196, 168, 255, 0) 68%); animation-delay: -6s; }
+    .blob-3 { width: 240px; height: 240px; top: 42%; left: 58%; background: radial-gradient(circle, rgba(255, 200, 228, 0.7), rgba(255, 200, 228, 0) 68%); animation-delay: -12s; }
+    @keyframes drift {
+      to { transform: translate3d(28px, -22px, 0) scale(1.08); }
+    }
+
+    .stage {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: max(20px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    }
+
+    .step {
+      width: 100%;
+      max-width: 420px;
+      transition: opacity 0.34s var(--ease-out), transform 0.34s var(--ease-out);
+    }
+    .step[hidden] { display: none; }
+    .step.is-entering { opacity: 0; transform: translateY(16px); transition: none; }
+    .step.is-leaving { opacity: 0; transform: translateY(-10px); transition-duration: 0.2s; pointer-events: none; }
+
+    .card {
+      position: relative;
+      padding: 30px 22px 30px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 30px;
+      background: var(--card);
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+    .card-top {
+      display: flex;
+      margin: -16px 0 6px -10px;
+    }
+
+    .title {
+      margin: 0;
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: clamp(2.15rem, 9.4vw, 2.8rem);
+      line-height: 1.05;
+      color: var(--ink);
+      text-wrap: balance;
+      outline: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      text-transform: inherit;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      touch-action: manipulation;
+    }
+    :focus-visible {
+      outline: 3px solid rgba(151, 116, 240, 0.55);
+      outline-offset: 3px;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .back:hover { background: rgba(196, 168, 255, 0.18); color: var(--ink); }
+
+    .btn {
+      appearance: none;
+      display: inline-flex;
+      flex: none;
+      align-items: center;
+      justify-content: center;
+      min-width: 108px;
+      min-height: 54px;
+      padding: 0 32px;
+      border: 0;
+      border-radius: 999px;
+      font-family: var(--body);
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: transform 0.18s var(--ease-out), box-shadow 0.2s, filter 0.2s;
+    }
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--pink-deep), var(--purple));
+      box-shadow: 0 10px 24px rgba(236, 94, 166, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+    .btn-primary:hover { filter: brightness(1.05) saturate(1.05); }
+
+    /* step 1 */
+    .answers {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 104px;
+      margin-top: 30px;
+    }
+    .btn-yes {
+      position: relative;
+      z-index: 1;
+      transform: scale(var(--grow, 1));
+      transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1), translate 0.32s var(--ease-out), box-shadow 0.2s, filter 0.2s;
+    }
+    .btn-yes:active { transform: scale(calc(var(--grow, 1) * 0.95)); }
+    .no-slot { display: inline-flex; margin-left: 14px; }
+    .no-slot[hidden] { display: none; }
+    .btn-no {
+      min-width: 96px;
+      color: var(--ink);
+      background: #fff;
+      box-shadow: var(--shadow);
+      touch-action: none;
+    }
+    .btn-no.is-free {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 60;
+      margin: 0;
+      transition: transform 150ms cubic-bezier(0.2, 0.9, 0.25, 1), opacity 0.2s, visibility 0.2s;
+      will-change: transform;
+    }
+    .btn-no.is-away { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    /* step 2 */
+    .times {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 26px;
+    }
+    .chip {
+      appearance: none;
+      min-height: 60px;
+      border: 2px solid transparent;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      color: var(--ink);
+      font-size: 1.25rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.18s var(--ease-out), background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .note {
+      margin: 18px 0 0;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    /* step 3 */
+    .foods {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .food {
+      appearance: none;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 116px;
+      padding: 14px 10px;
+      border: 2px solid transparent;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      color: var(--ink);
+      font-size: 1.02rem;
+      font-weight: 800;
+      line-height: 1.2;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease-out), background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .food-emoji { font-size: 2.1rem; line-height: 1; }
+    .chip:hover, .food:hover { transform: translateY(-2px); }
+    .chip[aria-pressed="true"], .food[aria-pressed="true"] {
+      border-color: var(--purple);
+      background: linear-gradient(150deg, #fff0f8, #eee5ff);
+      box-shadow: 0 12px 26px rgba(151, 116, 240, 0.28);
+      transform: translateY(-2px) scale(1.02);
+    }
+    .food[aria-pressed="true"]::after {
+      content: "✓";
+      position: absolute;
+      top: 8px;
+      right: 9px;
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: #fff;
+      font-size: 0.78rem;
+    }
+    .go-wrap { min-height: 54px; margin-top: 22px; }
+    .btn-go { min-width: 168px; }
+    .btn-go[hidden] { display: none; }
+    .btn-go.is-popping { animation: pop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes pop {
+      from { opacity: 0; transform: scale(0.6); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* step 4 */
+    .summary {
+      max-width: 300px;
+      margin: 24px auto 0;
+      padding: 4px 18px;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      text-align: left;
+    }
+    .summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 0;
+    }
+    .summary-row + .summary-row { border-top: 1px dashed rgba(151, 116, 240, 0.32); }
+    .summary-label {
+      color: var(--ink-soft);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .summary-value {
+      font-size: 1.08rem;
+      font-weight: 800;
+      text-align: right;
+    }
+    .status {
+      min-height: 1.4em;
+      margin: 14px 0 0;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .status.is-shown { opacity: 1; }
+    .signoff {
+      margin: 18px 0 0;
+      font-family: var(--hand);
+      font-size: 2.1rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .confetti {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span class="blob blob-1"></span><span class="blob blob-2"></span><span class="blob blob-3"></span></div>
+
+  <main class="stage">
+    <section class="step" data-step="ask">
+      <div class="card">
+        <h1 class="title" tabindex="-1">would you like to have lunch with me in march?</h1>
+        <div class="answers" id="answers">
+          <button class="btn btn-primary btn-yes" id="yes" type="button">yes</button>
+          <span class="no-slot" id="noSlot"><button class="btn btn-no" id="no" type="button" tabindex="-1" aria-hidden="true">no</button></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="time" hidden>
+      <div class="card">
+        <div class="card-top"><button class="back" type="button" data-back="ask">← back</button></div>
+        <h2 class="title" tabindex="-1">pick a time</h2>
+        <div class="times" role="group" aria-label="pick a time">
+          <button class="chip" type="button" data-time="6pm" aria-pressed="false">6pm</button>
+          <button class="chip" type="button" data-time="7pm" aria-pressed="false">7pm</button>
+          <button class="chip" type="button" data-time="8pm" aria-pressed="false">8pm</button>
+          <button class="chip" type="button" data-time="9pm" aria-pressed="false">9pm</button>
+        </div>
+        <p class="note">(yes, lunch at dinnertime. don't question it)</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="food" hidden>
+      <div class="card">
+        <div class="card-top"><button class="back" type="button" data-back="time">← back</button></div>
+        <h2 class="title" tabindex="-1">what are we eating?</h2>
+        <div class="foods" role="group" aria-label="what are we eating?">
+          <button class="food" type="button" data-food="sushi at nobu" aria-pressed="false"><span class="food-emoji" aria-hidden="true">🍣</span><span>sushi at nobu</span></button>
+          <button class="food" type="button" data-food="steak at benihana" aria-pressed="false"><span class="food-emoji" aria-hidden="true">🥩</span><span>steak at benihana</span></button>
+          <button class="food" type="button" data-food="burgers" aria-pressed="false"><span class="food-emoji" aria-hidden="true">🍔</span><span>burgers</span></button>
+          <button class="food" type="button" data-food="ice cream for dinner" aria-pressed="false"><span class="food-emoji" aria-hidden="true">🍦</span><span>ice cream for dinner</span></button>
+        </div>
+        <div class="go-wrap"><button class="btn btn-primary btn-go" id="go" type="button" hidden>go</button></div>
+      </div>
+    </section>
+
+    <section class="step" data-step="done" hidden>
+      <div class="card">
+        <div class="card-top"><button class="back" type="button" data-back="food">← back</button></div>
+        <h2 class="title" tabindex="-1">perfect, we'll pick you up on 22 march 2027 💜</h2>
+        <div class="summary">
+          <div class="summary-row"><span class="summary-label">time</span><span class="summary-value" id="sumTime"></span></div>
+          <div class="summary-row"><span class="summary-label">food</span><span class="summary-value" id="sumFood"></span></div>
+        </div>
+        <p class="status" id="status" aria-live="polite"></p>
+        <p class="signoff">see you soon sunshine</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // web3forms access key: get one free at https://web3forms.com (it emails the key to you).
+    // it only lets this page send email *to you*, so it's fine for it to sit in public html.
+    const WEB3FORMS_ACCESS_KEY = "YOUR_ACCESS_KEY_HERE";
+    const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+    const EMAIL_SUBJECT = "she said yes 💜";
+
+    (function () {
+      "use strict";
+
+      const $ = (sel) => document.querySelector(sel);
+      const $$ = (sel) => Array.prototype.slice.call(document.querySelectorAll(sel));
+      const motionQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+      const reducedMotion = () => !!(motionQuery && motionQuery.matches);
+      const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+
+      const steps = {};
+      $$(".step").forEach((el) => { steps[el.dataset.step] = el; });
+      let current = "ask";
+      let stepToken = 0;
+      let stepTimer = 0;
+
+      const picks = { time: null, food: null };
+
+      const yes = $("#yes");
+      const no = $("#no");
+      const noSlot = $("#noSlot");
+      const answers = $("#answers");
+      const go = $("#go");
+      const statusEl = $("#status");
+
+      /* ---------------- steps ---------------- */
+
+      function showStep(name) {
+        const next = steps[name];
+        const prev = steps[current];
+        if (!next || next === prev) return;
+        const token = ++stepToken;
+        clearTimeout(stepTimer);
+        current = name;
+        setNoAway(name !== "ask");
+
+        Object.keys(steps).forEach((key) => {
+          const el = steps[key];
+          if (el !== prev && el !== next) {
+            el.hidden = true;
+            el.classList.remove("is-entering", "is-leaving");
+          }
+        });
+
+        const settled = () => {
+          if (token !== stepToken) return;
+          const title = next.querySelector(".title");
+          if (title) {
+            try { title.focus({ preventScroll: true }); } catch (e) { title.focus(); }
+          }
+          if (name === "ask") revalidateNo();
+        };
+
+        const enter = () => {
+          if (token !== stepToken) return;
+          prev.hidden = true;
+          prev.classList.remove("is-leaving");
+          next.classList.remove("is-leaving");
+          window.scrollTo(0, 0);
+          if (reducedMotion()) {
+            next.classList.remove("is-entering");
+            next.hidden = false;
+            settled();
+            return;
+          }
+          next.classList.add("is-entering");
+          next.hidden = false;
+          void next.offsetWidth;
+          next.classList.remove("is-entering");
+          stepTimer = setTimeout(settled, 360);
+        };
+
+        if (reducedMotion()) {
+          enter();
+        } else {
+          prev.classList.add("is-leaving");
+          stepTimer = setTimeout(enter, 200);
+        }
+      }
+
+      $$("[data-back]").forEach((btn) => {
+        btn.addEventListener("click", () => showStep(btn.dataset.back));
+      });
+
+      /* ---------------- the "no" button that won't be pressed ---------------- */
+
+      const NEAR_PX = 80;      // desktop: jump once the cursor gets this close
+      const FAT_FINGER_PX = 36; // phones: a tap this close to "no" also makes it jump
+      const EDGE = 12;         // keep this far inside the visible viewport
+      const YES_GAP = 18;      // never land within this distance of "yes"
+      const GROW_STEP = 0.12;
+      const GROW_MAX = 1.8;
+
+      const noState = { free: false, x: 0, y: 0, rot: 0, dodges: 0 };
+      let lastPointerDown = -1e9;
+
+      function viewportBox() {
+        const vv = window.visualViewport;
+        if (vv && vv.width > 0 && vv.height > 0) {
+          return { left: vv.offsetLeft, top: vv.offsetTop, width: vv.width, height: vv.height };
+        }
+        const de = document.documentElement;
+        return { left: 0, top: 0, width: de.clientWidth || window.innerWidth, height: window.innerHeight || de.clientHeight };
+      }
+
+      function overlaps(a, b) {
+        return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+      }
+
+      function distToRect(x, y, r) {
+        const dx = Math.max(r.left - x, 0, x - r.right);
+        const dy = Math.max(r.top - y, 0, y - r.bottom);
+        return Math.hypot(dx, dy);
+      }
+
+      function currentGrow() {
+        return Math.min(1 + noState.dodges * GROW_STEP, GROW_MAX);
+      }
+
+      // where "no" is (or is heading), ignoring the in-flight animation
+      function noBox() {
+        if (!noState.free) {
+          const r = no.getBoundingClientRect();
+          return { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+        }
+        return { left: noState.x, top: noState.y, right: noState.x + no.offsetWidth, bottom: noState.y + no.offsetHeight };
+      }
+
+      // the area "no" must stay out of: where "yes" is now and where it's growing/gliding to
+      function yesAvoidBox() {
+        const scale = currentGrow();
+        const a = answers.getBoundingClientRect();
+        const w = yes.offsetWidth;
+        const h = yes.offsetHeight;
+        const cx = a.left + yes.offsetLeft + w / 2;
+        const cy = a.top + yes.offsetTop + h / 2;
+        const v = yes.getBoundingClientRect();
+        return {
+          left: Math.min(cx - (w * scale) / 2, v.left) - YES_GAP,
+          right: Math.max(cx + (w * scale) / 2, v.right) + YES_GAP,
+          top: Math.min(cy - (h * scale) / 2, v.top) - YES_GAP,
+          bottom: Math.max(cy + (h * scale) / 2, v.bottom) + YES_GAP,
+        };
+      }
+
+      function pickSpot(fromX, fromY) {
+        const vb = viewportBox();
+        const w = no.offsetWidth;
+        const h = no.offsetHeight;
+        const minX = vb.left + EDGE;
+        const minY = vb.top + EDGE;
+        const maxX = Math.max(minX, vb.left + vb.width - w - EDGE);
+        const maxY = Math.max(minY, vb.top + vb.height - h - EDGE);
+        const avoid = yesAvoidBox();
+        const cur = noBox();
+        const curX = (cur.left + cur.right) / 2;
+        const curY = (cur.top + cur.bottom) / 2;
+        const want = Math.max(110, Math.min(vb.width, vb.height) * 0.42);
+
+        const candidates = [];
+        for (let i = 0; i < 140; i++) {
+          candidates.push([minX + Math.random() * (maxX - minX), minY + Math.random() * (maxY - minY)]);
+        }
+        // a coarse grid as a fallback, so a free spot is always found when one exists
+        for (let gx = 0; gx <= 6; gx++) {
+          for (let gy = 0; gy <= 8; gy++) {
+            candidates.push([minX + ((maxX - minX) * gx) / 6, minY + ((maxY - minY) * gy) / 8]);
+          }
+        }
+
+        let best = null;
+        let bestScore = -1;
+        for (let i = 0; i < candidates.length; i++) {
+          const x = candidates[i][0];
+          const y = candidates[i][1];
+          const box = { left: x, top: y, right: x + w, bottom: y + h };
+          if (overlaps(box, avoid)) continue;
+          const fromTouch = distToRect(fromX, fromY, box);
+          const fromCur = Math.hypot(x + w / 2 - curX, y + h / 2 - curY);
+          if (i < 140 && fromTouch >= want && fromCur >= want * 0.75) return { x, y };
+          const score = Math.min(fromTouch, fromCur);
+          if (score > bestScore) {
+            bestScore = score;
+            best = { x, y };
+          }
+        }
+        if (best) return best;
+        // viewport too tiny to avoid "yes" at all: take the corner farthest from it
+        const ax = (avoid.left + avoid.right) / 2;
+        const ay = (avoid.top + avoid.bottom) / 2;
+        return { x: ax > vb.left + vb.width / 2 ? minX : maxX, y: ay > vb.top + vb.height / 2 ? minY : maxY };
+      }
+
+      function placeNo(x, y, rot, animate) {
+        noState.x = x;
+        noState.y = y;
+        noState.rot = rot;
+        if (!animate) no.style.transition = "none";
+        no.style.transform = "translate3d(" + x.toFixed(1) + "px, " + y.toFixed(1) + "px, 0) rotate(" + rot.toFixed(1) + "deg)";
+        if (!animate) {
+          void no.offsetWidth;
+          no.style.transition = "";
+        }
+      }
+
+      // first dodge: lift "no" out of the layout so it can roam the whole screen
+      function freeNo() {
+        if (noState.free) return;
+        const start = no.getBoundingClientRect();
+        const before = yes.getBoundingClientRect();
+        noState.free = true;
+        document.body.appendChild(no);
+        no.classList.add("is-free");
+        noSlot.hidden = true;
+        placeNo(start.left, start.top, 0, false);
+
+        // "yes" is alone now: let it glide to the middle instead of snapping
+        const after = yes.getBoundingClientRect();
+        const dx = (before.left + before.right) / 2 - (after.left + after.right) / 2;
+        if (dx && !reducedMotion() && "translate" in yes.style) {
+          yes.style.transition = "none";
+          yes.style.translate = dx + "px 0px";
+          void yes.offsetWidth;
+          yes.style.transition = "";
+          yes.style.translate = "0px 0px";
+        }
+      }
+
+      function dodge(fromX, fromY) {
+        if (current !== "ask" || steps.ask.hidden) return;
+        freeNo();
+        noState.dodges += 1;
+        yes.style.setProperty("--grow", currentGrow().toFixed(3));
+        const spot = pickSpot(fromX, fromY);
+        placeNo(spot.x, spot.y, Math.random() * 12 - 6, true);
+      }
+
+      function maybeDodge(x, y, radius) {
+        if (current !== "ask" || steps.ask.hidden || no.classList.contains("is-away")) return;
+        if (distToRect(x, y, noBox()) < radius) dodge(x, y);
+      }
+
+      function eventPoint(e) {
+        const t = (e.changedTouches && e.changedTouches[0]) || (e.touches && e.touches[0]);
+        if (t) return { x: t.clientX, y: t.clientY };
+        return { x: e.clientX, y: e.clientY };
+      }
+
+      // touching / pressing "no" makes it flee, and the press itself never counts
+      function onNoPress(e) {
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+        const now = performance.now();
+        if (e.type === "pointerdown") {
+          lastPointerDown = now;
+        } else if (now - lastPointerDown < 500) {
+          return; // the touchstart / mousedown twin of a pointerdown we already handled
+        }
+        const p = eventPoint(e);
+        dodge(p.x, p.y);
+      }
+
+      no.addEventListener("pointerdown", onNoPress);
+      no.addEventListener("touchstart", onNoPress, { passive: false });
+      no.addEventListener("mousedown", onNoPress);
+      ["click", "dblclick", "auxclick", "contextmenu", "touchend", "keydown", "keyup", "keypress"].forEach((type) => {
+        no.addEventListener(type, (e) => {
+          if (e.cancelable) e.preventDefault();
+          e.stopImmediatePropagation();
+        }, { capture: true, passive: false });
+      });
+      no.addEventListener("focus", () => no.blur());
+
+      // desktop: run away from the cursor before it arrives
+      if (window.PointerEvent) {
+        document.addEventListener("pointermove", (e) => {
+          if (e.pointerType === "touch") return;
+          maybeDodge(e.clientX, e.clientY, NEAR_PX);
+        }, { passive: true });
+        document.addEventListener("pointerdown", (e) => {
+          if (e.target === no || yes.contains(e.target)) return;
+          maybeDodge(e.clientX, e.clientY, e.pointerType === "mouse" ? NEAR_PX : FAT_FINGER_PX);
+        }, { passive: true, capture: true });
+      } else {
+        document.addEventListener("mousemove", (e) => maybeDodge(e.clientX, e.clientY, NEAR_PX), { passive: true });
+      }
+      no.addEventListener("mouseenter", (e) => maybeDodge(e.clientX, e.clientY, NEAR_PX));
+
+      function setNoAway(away) {
+        if (noState.free) no.classList.toggle("is-away", away);
+      }
+
+      // keep "no" on screen (and off "yes") when the viewport changes: rotation, browser bars, zoom
+      function revalidateNo() {
+        if (!noState.free || current !== "ask" || steps.ask.hidden) return;
+        const vb = viewportBox();
+        const w = no.offsetWidth;
+        const h = no.offsetHeight;
+        const x = clamp(noState.x, vb.left + EDGE, vb.left + vb.width - w - EDGE);
+        const y = clamp(noState.y, vb.top + EDGE, vb.top + vb.height - h - EDGE);
+        if (overlaps({ left: x, top: y, right: x + w, bottom: y + h }, yesAvoidBox())) {
+          const r = yes.getBoundingClientRect();
+          const spot = pickSpot((r.left + r.right) / 2, (r.top + r.bottom) / 2);
+          placeNo(spot.x, spot.y, noState.rot, true);
+        } else if (x !== noState.x || y !== noState.y) {
+          placeNo(x, y, noState.rot, true);
+        }
+      }
+
+      let revalidateQueued = false;
+      function queueRevalidate() {
+        if (revalidateQueued) return;
+        revalidateQueued = true;
+        requestAnimationFrame(() => {
+          revalidateQueued = false;
+          revalidateNo();
+        });
+      }
+      window.addEventListener("resize", queueRevalidate);
+      window.addEventListener("orientationchange", queueRevalidate);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", queueRevalidate);
+        window.visualViewport.addEventListener("scroll", queueRevalidate);
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(queueRevalidate);
+
+      yes.addEventListener("click", () => showStep("time"));
+
+      /* ---------------- picks ---------------- */
+
+      function markPicked(selector, chosen) {
+        $$(selector).forEach((el) => el.setAttribute("aria-pressed", el === chosen ? "true" : "false"));
+      }
+
+      let timeTimer = 0;
+      $$("[data-time]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (current !== "time") return;
+          picks.time = btn.dataset.time;
+          markPicked("[data-time]", btn);
+          clearTimeout(timeTimer);
+          timeTimer = setTimeout(() => {
+            if (current === "time") showStep("food");
+          }, reducedMotion() ? 120 : 280);
+        });
+      });
+
+      $$("[data-food]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (current !== "food") return;
+          picks.food = btn.dataset.food;
+          markPicked("[data-food]", btn);
+          if (go.hidden) {
+            go.hidden = false;
+            go.classList.remove("is-popping");
+            void go.offsetWidth;
+            go.classList.add("is-popping");
+            if (go.scrollIntoView) go.scrollIntoView({ block: "nearest", behavior: reducedMotion() ? "auto" : "smooth" });
+          }
+        });
+      });
+
+      go.addEventListener("click", () => {
+        if (current !== "food" || !picks.time || !picks.food) return;
+        const time = picks.time;
+        const food = picks.food;
+        $("#sumTime").textContent = time;
+        $("#sumFood").textContent = food;
+        sendAnswers(time, food);
+        burst(go);
+        showStep("done");
+      });
+
+      /* ---------------- email (web3forms) ---------------- */
+
+      const STATUS_TEXT = {
+        sent: "your answers have been sent 💌",
+        failed: "screenshot this and send it to me 😌",
+      };
+      let sendSeq = 0;
+      let lastAttempt = null; // { key, state: "pending" | "sent" | "failed", promise }
+
+      function setStatus(kind) {
+        statusEl.textContent = kind ? STATUS_TEXT[kind] : "";
+        statusEl.classList.toggle("is-shown", !!kind);
+      }
+
+      function sendAnswers(time, food) {
+        const key = time + "\n" + food;
+        const seq = ++sendSeq;
+        if (lastAttempt && lastAttempt.key === key && lastAttempt.state === "sent") {
+          setStatus("sent"); // same picks already in the inbox: nothing new to send
+          return;
+        }
+        setStatus(null);
+        if (!(lastAttempt && lastAttempt.key === key && lastAttempt.state === "pending")) {
+          const attempt = { key, state: "pending", promise: null };
+          attempt.promise = postAnswers(time, food).then((ok) => {
+            attempt.state = ok ? "sent" : "failed";
+            return ok;
+          });
+          lastAttempt = attempt;
+        }
+        lastAttempt.promise.then((ok) => {
+          if (seq === sendSeq) setStatus(ok ? "sent" : "failed");
+        });
+      }
+
+      function isConfigured() {
+        const key = String(WEB3FORMS_ACCESS_KEY || "").trim();
+        return key !== "" && key !== "YOUR_ACCESS_KEY_HERE";
+      }
+
+      // utc on purpose: a local time zone would hint at where she is
+      function timestamp() {
+        return new Date().toISOString().slice(0, 16).replace("T", " ") + " utc";
+      }
+
+      // only her two picks and a timestamp leave the page
+      function postAnswers(time, food) {
+        if (!isConfigured() || !window.fetch || !window.FormData) return Promise.resolve(false);
+        const body = new FormData();
+        body.append("access_key", String(WEB3FORMS_ACCESS_KEY).trim());
+        body.append("subject", EMAIL_SUBJECT);
+        body.append("from_name", "a very important question");
+        body.append("time", time);
+        body.append("food", food);
+        body.append("timestamp", timestamp());
+        const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+        const timer = ctrl ? setTimeout(() => ctrl.abort(), 15000) : 0;
+        let request;
+        try {
+          request = fetch(WEB3FORMS_ENDPOINT, {
+            method: "POST",
+            body: body,
+            headers: { Accept: "application/json" },
+            signal: ctrl ? ctrl.signal : undefined,
+          });
+        } catch (e) {
+          request = Promise.reject(e);
+        }
+        return request
+          .then((res) => res.json().then((data) => res.ok && !!data && data.success === true, () => false))
+          .catch(() => false)
+          .then((ok) => {
+            clearTimeout(timer);
+            return ok;
+          });
+      }
+
+      /* ---------------- confetti ---------------- */
+
+      function drawHeart(ctx, s) {
+        ctx.beginPath();
+        ctx.moveTo(0, s * 0.35);
+        ctx.bezierCurveTo(-s * 0.6, -s * 0.1, -s * 0.28, -s * 0.62, 0, -s * 0.24);
+        ctx.bezierCurveTo(s * 0.28, -s * 0.62, s * 0.6, -s * 0.1, 0, s * 0.35);
+        ctx.fill();
+      }
+
+      function burst(fromEl) {
+        if (reducedMotion()) return;
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext && canvas.getContext("2d");
+        if (!ctx) return;
+        canvas.className = "confetti";
+        canvas.setAttribute("aria-hidden", "true");
+        document.body.appendChild(canvas);
+
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(W * dpr);
+        canvas.height = Math.round(H * dpr);
+        ctx.scale(dpr, dpr);
+
+        const r = fromEl.getBoundingClientRect();
+        const ox = r.left + r.width / 2;
+        const oy = r.top + r.height / 2;
+        const colors = ["#ff8cc8", "#ec5ea6", "#c4a8ff", "#9774f0", "#ffd1e8", "#ffffff", "#ffb3d9"];
+        const parts = [];
+        for (let i = 0; i < 110; i++) {
+          const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.15;
+          const speed = 6 + Math.random() * 9;
+          parts.push({
+            x: ox,
+            y: oy,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            w: 5 + Math.random() * 6,
+            h: 3 + Math.random() * 4,
+            rot: Math.random() * Math.PI,
+            spin: (Math.random() - 0.5) * 0.3,
+            color: colors[i % colors.length],
+            heart: Math.random() < 0.2,
+          });
+        }
+
+        const LIFE = 2300;
+        const start = performance.now();
+        let last = start;
+        function frame(now) {
+          const t = now - start;
+          const dt = Math.min(2.5, Math.max(0, (now - last) / 16.67));
+          last = now;
+          ctx.clearRect(0, 0, W, H);
+          ctx.globalAlpha = t > LIFE * 0.6 ? Math.max(0, 1 - (t - LIFE * 0.6) / (LIFE * 0.4)) : 1;
+          const drag = Math.pow(0.985, dt);
+          for (let i = 0; i < parts.length; i++) {
+            const p = parts[i];
+            p.vx *= drag;
+            p.vy = p.vy * drag + 0.3 * dt;
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.rot += p.spin * dt;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot);
+            ctx.fillStyle = p.color;
+            if (p.heart) drawHeart(ctx, p.w * 1.5);
+            else ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+          }
+          if (t < LIFE) requestAnimationFrame(frame);
+          else canvas.remove();
+        }
+        requestAnimationFrame(frame);
+      }
+    })();
+  </script>
+</body>
+</html>
