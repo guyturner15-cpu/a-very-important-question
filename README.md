@@ -18,6 +18,20 @@ When she taps **go**, the page posts only her time, her food and a UTC timestamp
 
 Check your spam/promotions folder for the first email.
 
+### Fallback: Formspree
+
+Web3Forms' free plan may block sites hosted on `github.io`. If emails don't arrive, switch to Formspree:
+
+1. Sign up at <https://formspree.io> and create a form. Its endpoint looks like `https://formspree.io/f/abcdwxyz`.
+2. In `index.html`, paste it into `FORMSPREE_ENDPOINT` and set the Web3Forms key to `""`:
+
+   ```js
+   const WEB3FORMS_ACCESS_KEY = "";
+   const FORMSPREE_ENDPOINT = "https://formspree.io/f/abcdwxyz";
+   ```
+
+Formspree is only used when the Web3Forms key is empty. It gets the same three fields and subject line. If both are empty, nothing is sent and she sees the screenshot line.
+
 ## 2. Put it online (GitHub Pages)
 
 1. Merge this branch into `main`.

@@ -319,7 +319,7 @@
       transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1), translate 0.32s var(--ease-out), box-shadow 0.2s, filter 0.2s;
     }
     .btn-yes:active { transform: scale(calc(var(--grow, 1) * 0.95)); }
-    .no-slot { display: inline-flex; margin-left: 14px; }
+    .no-slot { display: inline-flex; margin-left: 24px; }
     .no-slot[hidden] { display: none; }
     .btn-no {
       min-width: 96px;
@@ -705,6 +705,10 @@
     // web3forms access key: get one free at https://web3forms.com (it emails the key to you).
     // it only lets this page send email *to you*, so it's fine for it to sit in public html.
     const WEB3FORMS_ACCESS_KEY = "YOUR_ACCESS_KEY_HERE";
+    // formspree fallback: used only when the web3forms key above is empty (or still the placeholder).
+    // make a free form at https://formspree.io and paste its endpoint, e.g. "https://formspree.io/f/abcdwxyz".
+    // if both are empty, nothing is sent and she's asked to screenshot her answers instead.
+    const FORMSPREE_ENDPOINT = "";
     const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
     const EMAIL_SUBJECT = "she said yes 💜";
 
@@ -742,7 +746,7 @@
         clearTimeout(stepTimer);
         current = name;
         document.body.setAttribute("data-step", name);
-        setNoAway(name !== "ask");
+        if (name !== "ask") setNoAway(true);
 
         Object.keys(steps).forEach((key) => {
           const el = steps[key];
@@ -758,7 +762,10 @@
           if (title) {
             try { title.focus({ preventScroll: true }); } catch (e) { title.focus(); }
           }
-          if (name === "ask") revalidateNo();
+          if (name === "ask") {
+            revalidateNo();
+            setNoAway(false);
+          }
         };
 
         const enter = () => {
@@ -797,11 +804,12 @@
       const NEAR_PX = 80;      // desktop: jump once the cursor gets this close
       const FAT_FINGER_PX = 36; // phones: a tap this close to "no" also makes it jump
       const EDGE = 12;         // keep this far inside the visible viewport
-      const YES_GAP = 18;      // never land within this distance of "yes"
+      const YES_GAP = 24;      // "no" never comes closer than this to "yes": landing, mid-flick or while scrolling
+      const TILT_PAD = 6;      // "no" is drawn tilted up to 6deg, which pokes its corners out a few px
       const GROW_STEP = 0.12;
       const GROW_MAX = 1.8;
 
-      const noState = { free: false, x: 0, y: 0, rot: 0, dodges: 0 };
+      const noState = { free: false, x: 0, y: 0, rot: 0, dodges: 0, lastDodge: -1e9 };
       let lastPointerDown = -1e9;
 
       function viewportBox() {
@@ -837,8 +845,8 @@
       }
 
       // the area "no" must stay out of: where "yes" is now and where it's growing/gliding to
-      function yesAvoidBox() {
-        const scale = currentGrow();
+      function yesAvoidBox(gap) {
+        const scale = currentGrow() + 0.03; // + the springy overshoot of the grow animation
         const a = answers.getBoundingClientRect();
         const w = yes.offsetWidth;
         const h = yes.offsetHeight;
@@ -846,11 +854,50 @@
         const cy = a.top + yes.offsetTop + h / 2;
         const v = yes.getBoundingClientRect();
         return {
-          left: Math.min(cx - (w * scale) / 2, v.left) - YES_GAP,
-          right: Math.max(cx + (w * scale) / 2, v.right) + YES_GAP,
-          top: Math.min(cy - (h * scale) / 2, v.top) - YES_GAP,
-          bottom: Math.max(cy + (h * scale) / 2, v.bottom) + YES_GAP,
+          left: Math.min(cx - (w * scale) / 2, v.left) - gap,
+          right: Math.max(cx + (w * scale) / 2, v.right) + gap,
+          top: Math.min(cy - (h * scale) / 2, v.top) - gap,
+          bottom: Math.max(cy + (h * scale) / 2, v.bottom) + gap,
         };
+      }
+
+      function pageScrolls() {
+        const se = document.scrollingElement || document.documentElement;
+        return se.scrollHeight > window.innerHeight + 1;
+      }
+
+      // "yes" plus the 24px gap. "no" is fixed to the screen but "yes" scrolls with the page,
+      // so when the page can scroll (short landscape screens) "no" keeps out of the whole
+      // up-and-down strip "yes" can slide through, as long as there's room beside it
+      function keepOutBox() {
+        const box = yesAvoidBox(YES_GAP + TILT_PAD);
+        if (pageScrolls()) {
+          const vb = viewportBox();
+          const w = no.offsetWidth;
+          if (box.left - (vb.left + EDGE) >= w || vb.left + vb.width - EDGE - box.right >= w) {
+            box.top = -1e9;
+            box.bottom = 1e9;
+          }
+        }
+        return box;
+      }
+
+      // does a straight flick from where "no" is now to (x, y) stay clear of "yes" the whole way?
+      function flickClear(x, y, keepOut) {
+        const w = no.offsetWidth;
+        const h = no.offsetHeight;
+        const r = no.getBoundingClientRect();
+        const sx = (r.left + r.right) / 2 - w / 2;
+        const sy = (r.top + r.bottom) / 2 - h / 2;
+        // starting inside the gap (e.g. right next to "yes" before the first dodge): just don't cross "yes" itself
+        const startBox = { left: sx, top: sy, right: sx + w, bottom: sy + h };
+        const avoid = overlaps(startBox, keepOut) ? yesAvoidBox(TILT_PAD) : keepOut;
+        for (let i = 1; i < 16; i++) {
+          const px = sx + ((x - sx) * i) / 16;
+          const py = sy + ((y - sy) * i) / 16;
+          if (overlaps({ left: px, top: py, right: px + w, bottom: py + h }, avoid)) return false;
+        }
+        return true;
       }
 
       function pickSpot(fromX, fromY) {
@@ -861,7 +908,7 @@
         const minY = vb.top + EDGE;
         const maxX = Math.max(minX, vb.left + vb.width - w - EDGE);
         const maxY = Math.max(minY, vb.top + vb.height - h - EDGE);
-        const avoid = yesAvoidBox();
+        const avoid = keepOutBox();
         const cur = noBox();
         const curX = (cur.left + cur.right) / 2;
         const curY = (cur.top + cur.bottom) / 2;
@@ -878,8 +925,12 @@
           }
         }
 
+        // a spot whose flick would cross "yes" is still allowed, but "no" then jumps there instantly
+        let farJump = null;
         let best = null;
         let bestScore = -1;
+        let bestClear = null;
+        let bestClearScore = -1;
         for (let i = 0; i < candidates.length; i++) {
           const x = candidates[i][0];
           const y = candidates[i][1];
@@ -887,18 +938,27 @@
           if (overlaps(box, avoid)) continue;
           const fromTouch = distToRect(fromX, fromY, box);
           const fromCur = Math.hypot(x + w / 2 - curX, y + h / 2 - curY);
-          if (i < 140 && fromTouch >= want && fromCur >= want * 0.75) return { x, y };
+          const clear = flickClear(x, y, avoid);
+          const farEnough = i < 140 && fromTouch >= want && fromCur >= want * 0.75;
+          if (farEnough && clear) return { x, y, animate: true };
+          if (farEnough && !farJump) farJump = { x, y, animate: false };
           const score = Math.min(fromTouch, fromCur);
+          if (clear && score > bestClearScore) {
+            bestClearScore = score;
+            bestClear = { x, y, animate: true };
+          }
           if (score > bestScore) {
             bestScore = score;
-            best = { x, y };
+            best = { x, y, animate: false };
           }
         }
+        if (farJump) return farJump;
+        if (bestClear) return bestClear;
         if (best) return best;
         // viewport too tiny to avoid "yes" at all: take the corner farthest from it
         const ax = (avoid.left + avoid.right) / 2;
         const ay = (avoid.top + avoid.bottom) / 2;
-        return { x: ax > vb.left + vb.width / 2 ? minX : maxX, y: ay > vb.top + vb.height / 2 ? minY : maxY };
+        return { x: ax > vb.left + vb.width / 2 ? minX : maxX, y: ay > vb.top + vb.height / 2 ? minY : maxY, animate: false };
       }
 
       function placeNo(x, y, rot, animate) {
@@ -942,9 +1002,10 @@
         puff((was.left + was.right) / 2, (was.top + was.bottom) / 2);
         freeNo();
         noState.dodges += 1;
+        noState.lastDodge = performance.now();
         yes.style.setProperty("--grow", currentGrow().toFixed(3));
         const spot = pickSpot(fromX, fromY);
-        placeNo(spot.x, spot.y, Math.random() * 12 - 6, true);
+        placeNo(spot.x, spot.y, Math.random() * 12 - 6, spot.animate);
       }
 
       function maybeDodge(x, y, radius) {
@@ -1002,7 +1063,8 @@
         if (noState.free) no.classList.toggle("is-away", away);
       }
 
-      // keep "no" on screen (and off "yes") when the viewport changes: rotation, browser bars, zoom
+      // keep "no" on screen and clear of "yes" when the viewport changes or the page scrolls:
+      // rotation, browser bars, zoom, short landscape screens
       function revalidateNo() {
         if (!noState.free || current !== "ask" || steps.ask.hidden) return;
         const vb = viewportBox();
@@ -1010,12 +1072,13 @@
         const h = no.offsetHeight;
         const x = clamp(noState.x, vb.left + EDGE, vb.left + vb.width - w - EDGE);
         const y = clamp(noState.y, vb.top + EDGE, vb.top + vb.height - h - EDGE);
-        if (overlaps({ left: x, top: y, right: x + w, bottom: y + h }, yesAvoidBox())) {
+        const keepOut = keepOutBox();
+        if (overlaps({ left: x, top: y, right: x + w, bottom: y + h }, keepOut)) {
           const r = yes.getBoundingClientRect();
           const spot = pickSpot((r.left + r.right) / 2, (r.top + r.bottom) / 2);
-          placeNo(spot.x, spot.y, noState.rot, true);
+          placeNo(spot.x, spot.y, noState.rot, spot.animate);
         } else if (x !== noState.x || y !== noState.y) {
-          placeNo(x, y, noState.rot, true);
+          placeNo(x, y, noState.rot, flickClear(x, y, keepOut));
         }
       }
 
@@ -1030,13 +1093,36 @@
       }
       window.addEventListener("resize", queueRevalidate);
       window.addEventListener("orientationchange", queueRevalidate);
+      window.addEventListener("scroll", revalidateNo, { passive: true });
       if (window.visualViewport) {
         window.visualViewport.addEventListener("resize", queueRevalidate);
-        window.visualViewport.addEventListener("scroll", queueRevalidate);
+        window.visualViewport.addEventListener("scroll", revalidateNo);
       }
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(queueRevalidate);
 
+      /* ---------------- double-tap guard ---------------- */
+
+      // a quick second tap must never count: not on "yes" just after "no" dodged
+      // (the second tap of a double tap on "no" can land on "yes"), and not on
+      // anything while a tapped option moves the page on
+      const TAP_GUARD_MS = 400;
+      let tapsLockedUntil = 0;
+
+      function lockTaps() {
+        tapsLockedUntil = performance.now() + TAP_GUARD_MS;
+      }
+
+      document.addEventListener("click", (e) => {
+        const now = performance.now();
+        const onYes = yes.contains(e.target);
+        if (now < tapsLockedUntil || (onYes && now - noState.lastDodge < TAP_GUARD_MS)) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+        }
+      }, true);
+
       yes.addEventListener("click", (e) => {
+        lockTaps();
         boom(e, yes);
         showStep("time");
       });
@@ -1051,6 +1137,7 @@
       $$("[data-time]").forEach((btn) => {
         btn.addEventListener("click", (e) => {
           if (current !== "time") return;
+          lockTaps();
           boom(e, btn);
           picks.time = btn.dataset.time;
           markPicked("[data-time]", btn);
@@ -1064,6 +1151,7 @@
       $$("[data-food]").forEach((btn) => {
         btn.addEventListener("click", (e) => {
           if (current !== "food") return;
+          lockTaps();
           boom(e, btn);
           picks.food = btn.dataset.food;
           markPicked("[data-food]", btn);
@@ -1079,6 +1167,7 @@
 
       go.addEventListener("click", (e) => {
         if (current !== "food" || !picks.time || !picks.food) return;
+        lockTaps();
         const time = picks.time;
         const food = picks.food;
         $("#sumTime").textContent = time;
@@ -1123,9 +1212,9 @@
         });
       }
 
-      function isConfigured() {
+      function web3formsKey() {
         const key = String(WEB3FORMS_ACCESS_KEY || "").trim();
-        return key !== "" && key !== "YOUR_ACCESS_KEY_HERE";
+        return key === "YOUR_ACCESS_KEY_HERE" ? "" : key;
       }
 
       // utc on purpose: a local time zone would hint at where she is
@@ -1133,13 +1222,27 @@
         return new Date().toISOString().slice(0, 16).replace("T", " ") + " utc";
       }
 
-      // only her two picks and a timestamp leave the page
+      // only her two picks and a timestamp leave the page: via web3forms, or formspree if there's no web3forms key
       function postAnswers(time, food) {
-        if (!isConfigured() || !window.fetch || !window.FormData) return Promise.resolve(false);
+        if (!window.fetch || !window.FormData) return Promise.resolve(false);
+        const key = web3formsKey();
+        const formspree = String(FORMSPREE_ENDPOINT || "").trim();
         const body = new FormData();
-        body.append("access_key", String(WEB3FORMS_ACCESS_KEY).trim());
-        body.append("subject", EMAIL_SUBJECT);
-        body.append("from_name", "a very important question");
+        let url;
+        let succeeded;
+        if (key) {
+          url = WEB3FORMS_ENDPOINT;
+          body.append("access_key", key);
+          body.append("subject", EMAIL_SUBJECT);
+          body.append("from_name", "a very important question");
+          succeeded = (res, data) => res.ok && !!data && data.success === true;
+        } else if (formspree) {
+          url = formspree;
+          body.append("_subject", EMAIL_SUBJECT);
+          succeeded = (res, data) => res.ok && !!data && !data.errors;
+        } else {
+          return Promise.resolve(false);
+        }
         body.append("time", time);
         body.append("food", food);
         body.append("timestamp", timestamp());
@@ -1147,7 +1250,7 @@
         const timer = ctrl ? setTimeout(() => ctrl.abort(), 15000) : 0;
         let request;
         try {
-          request = fetch(WEB3FORMS_ENDPOINT, {
+          request = fetch(url, {
             method: "POST",
             body: body,
             headers: { Accept: "application/json" },
@@ -1157,7 +1260,7 @@
           request = Promise.reject(e);
         }
         return request
-          .then((res) => res.json().then((data) => res.ok && !!data && data.success === true, () => false))
+          .then((res) => res.json().then((data) => succeeded(res, data), () => false))
           .catch(() => false)
           .then((ok) => {
             clearTimeout(timer);
