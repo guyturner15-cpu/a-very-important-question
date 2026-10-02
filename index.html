@@ -1,0 +1,1378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#07070f">
+  <meta name="robots" content="noindex, nofollow">
+  <title>a very important question</title>
+  <meta name="description" content="for stink only">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="a very important question">
+  <meta property="og:description" content="for stink only">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="a very important question">
+  <meta name="twitter:description" content="for stink only">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%9C%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Knewave&family=Nunito:wght@500;700;800&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --night: #07070f;
+      --navy: #0b1030;
+      --ink: #f7ecff;
+      --ink-soft: #c6b6e8;
+      --pink: #ff3ea5;
+      --pink-hot: #ff2bd6;
+      --blue: #2de2ff;
+      --toxic: #8dff4f;
+      --card: rgba(13, 12, 34, 0.8);
+      --line: rgba(255, 62, 165, 0.4);
+      --glow-pink: 0 0 8px rgba(255, 62, 165, 0.75), 0 0 22px rgba(255, 62, 165, 0.38);
+      --glow-blue: 0 0 8px rgba(45, 226, 255, 0.7), 0 0 22px rgba(45, 226, 255, 0.32);
+      --ease-out: cubic-bezier(0.22, 0.8, 0.24, 1);
+      --marker: "Knewave", "Marker Felt", "Comic Sans MS", cursive;
+      --body: "Nunito", ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      background: var(--night);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--body);
+      color: var(--ink);
+      text-transform: lowercase;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    /* undercity night: navy-black wash with neon pink, electric blue and a little toxic green */
+    .bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(120% 60% at 100% 0%, rgba(255, 43, 214, 0.16), rgba(255, 43, 214, 0) 60%),
+        radial-gradient(90% 55% at 0% 45%, rgba(61, 123, 255, 0.16), rgba(61, 123, 255, 0) 60%),
+        radial-gradient(80% 45% at 30% 100%, rgba(141, 255, 79, 0.1), rgba(141, 255, 79, 0) 65%),
+        linear-gradient(180deg, #07070f 0%, var(--navy) 55%, #07070f 100%);
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .blob-1 { width: 340px; height: 340px; top: -110px; right: -120px; background: radial-gradient(circle, rgba(255, 62, 165, 0.28), rgba(255, 62, 165, 0) 68%); }
+    .blob-2 { width: 380px; height: 380px; bottom: -150px; left: -150px; background: radial-gradient(circle, rgba(45, 226, 255, 0.2), rgba(45, 226, 255, 0) 68%); animation-delay: -6s; }
+    .blob-3 { width: 260px; height: 260px; top: 55%; right: -90px; background: radial-gradient(circle, rgba(141, 255, 79, 0.13), rgba(141, 255, 79, 0) 68%); animation-delay: -12s; }
+    @keyframes drift {
+      to { transform: translate3d(-26px, 22px, 0) scale(1.08); }
+    }
+
+    /* step 3 backdrop: the photo fills the screen (cover), under a dark overlay */
+    .scene {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      display: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s var(--ease-out);
+    }
+    .scene img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 45% 50%;
+    }
+    .scene::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(90% 60% at 50% 40%, rgba(7, 7, 15, 0.42), rgba(7, 7, 15, 0.78)),
+        linear-gradient(180deg, rgba(255, 43, 214, 0.1), rgba(45, 226, 255, 0.08));
+    }
+    body[data-step="time"] .scene-food,
+    body[data-step="food"] .scene-food,
+    body[data-step="done"] .scene-food { display: block; }
+    body[data-step="food"] .scene-food { opacity: 1; }
+
+    /* graffiti doodles around the edges */
+    .doodles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .doodle {
+      position: absolute;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.85;
+      filter: drop-shadow(0 0 3px currentColor) drop-shadow(0 0 8px currentColor);
+    }
+    .d-pink { color: var(--pink); }
+    .d-blue { color: var(--blue); }
+    .d-green { color: var(--toxic); }
+
+    .stage {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: max(20px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    }
+    .stage.is-shaking { animation: shake 260ms linear; }
+    .stage.is-shaking-big { animation: shake-big 480ms linear; }
+    @keyframes shake {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-3px, 2px); }
+      40% { transform: translate(3px, -2px); }
+      60% { transform: translate(-2px, -1px); }
+      80% { transform: translate(2px, 1px); }
+    }
+    @keyframes shake-big {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      10% { transform: translate(-6px, 3px) rotate(-0.6deg); }
+      25% { transform: translate(6px, -4px) rotate(0.5deg); }
+      40% { transform: translate(-5px, 2px) rotate(-0.4deg); }
+      55% { transform: translate(4px, 3px) rotate(0.3deg); }
+      70% { transform: translate(-3px, -2px); }
+      85% { transform: translate(2px, 1px); }
+    }
+
+    .step {
+      width: 100%;
+      max-width: 420px;
+      transition: opacity 0.34s var(--ease-out), transform 0.34s var(--ease-out);
+    }
+    .step[hidden] { display: none; }
+    .step.is-entering { opacity: 0; transform: translateY(16px); transition: none; }
+    .step.is-leaving { opacity: 0; transform: translateY(-10px); transition-duration: 0.2s; pointer-events: none; }
+
+    /* step 1: picture edge to edge at the top, question + buttons centred underneath */
+    .step-ask {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      margin-top: calc(-1 * max(20px, env(safe-area-inset-top)));
+      margin-bottom: calc(-1 * max(24px, env(safe-area-inset-bottom)));
+    }
+    .hero {
+      display: block;
+      flex: none;
+      width: calc(100% + 32px);
+      max-width: none;
+      height: auto;
+      max-height: 42vh;
+      max-height: 42svh;
+      margin: 0 -16px;
+      object-fit: contain;
+    }
+    .step-ask .card {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 18px 4px 26px;
+    }
+
+    .card {
+      position: relative;
+      padding: 28px 22px 30px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--card);
+      box-shadow: 0 0 0 1px rgba(45, 226, 255, 0.1), 0 22px 60px rgba(0, 0, 0, 0.55), 0 0 36px rgba(255, 62, 165, 0.14);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      text-align: center;
+    }
+    .card-bare {
+      border: 0;
+      background: none;
+      box-shadow: none;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    .card-top {
+      display: flex;
+      margin: -14px 0 6px -10px;
+    }
+
+    .title {
+      margin: 0;
+      font-family: var(--marker);
+      font-weight: 400;
+      font-size: clamp(1.6rem, 7.4vw, 2.3rem);
+      line-height: 1.18;
+      color: #fff4fb;
+      text-shadow: 0 0 6px rgba(255, 62, 165, 0.85), 0 0 18px rgba(255, 62, 165, 0.5), 0 0 34px rgba(255, 62, 165, 0.25);
+      text-wrap: balance;
+      outline: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      text-transform: inherit;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      touch-action: manipulation;
+    }
+    :focus-visible {
+      outline: 3px solid rgba(45, 226, 255, 0.7);
+      outline-offset: 3px;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: color 0.2s, text-shadow 0.2s, background 0.2s;
+    }
+    .back:hover {
+      background: rgba(45, 226, 255, 0.08);
+      color: #fff;
+      text-shadow: 0 0 8px rgba(45, 226, 255, 0.8);
+    }
+
+    .btn {
+      appearance: none;
+      display: inline-flex;
+      flex: none;
+      align-items: center;
+      justify-content: center;
+      min-width: 108px;
+      min-height: 54px;
+      padding: 0 32px;
+      border: 2px solid var(--pink);
+      border-radius: 999px;
+      background: rgba(255, 62, 165, 0.12);
+      color: #fff;
+      font-family: var(--body);
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 8px rgba(255, 62, 165, 0.85);
+      box-shadow: var(--glow-pink), inset 0 0 12px rgba(255, 62, 165, 0.25);
+      cursor: pointer;
+      transition: transform 0.18s var(--ease-out), box-shadow 0.2s, filter 0.2s;
+    }
+    .btn-primary:hover { filter: brightness(1.15); }
+
+    /* step 1 */
+    .answers {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 104px;
+      margin-top: 22px;
+    }
+    .btn-yes {
+      position: relative;
+      z-index: 1;
+      transform: scale(var(--grow, 1));
+      transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1), translate 0.32s var(--ease-out), box-shadow 0.2s, filter 0.2s;
+    }
+    .btn-yes:active { transform: scale(calc(var(--grow, 1) * 0.95)); }
+    .no-slot { display: inline-flex; margin-left: 24px; }
+    .no-slot[hidden] { display: none; }
+    .btn-no {
+      min-width: 96px;
+      border-color: var(--blue);
+      background: rgba(45, 226, 255, 0.1);
+      text-shadow: 0 0 8px rgba(45, 226, 255, 0.85);
+      box-shadow: var(--glow-blue), inset 0 0 12px rgba(45, 226, 255, 0.22);
+      touch-action: none;
+    }
+    .btn-no.is-free {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 60;
+      margin: 0;
+      transition: transform 150ms cubic-bezier(0.2, 0.9, 0.25, 1), opacity 0.2s, visibility 0.2s;
+      will-change: transform;
+    }
+    .btn-no.is-away { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    /* step 2 */
+    .times {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 26px;
+    }
+    .chip {
+      appearance: none;
+      min-height: 60px;
+      border: 2px solid rgba(45, 226, 255, 0.8);
+      border-radius: 999px;
+      background: rgba(45, 226, 255, 0.07);
+      color: #effdff;
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-shadow: 0 0 8px rgba(45, 226, 255, 0.6);
+      box-shadow: 0 0 8px rgba(45, 226, 255, 0.35), inset 0 0 10px rgba(45, 226, 255, 0.12);
+      cursor: pointer;
+      transition: transform 0.18s var(--ease-out), background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .note {
+      margin: 18px 0 0;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    /* step 3 */
+    .foods {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .food {
+      appearance: none;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 116px;
+      padding: 14px 10px;
+      border: 2px solid rgba(45, 226, 255, 0.6);
+      border-radius: 20px;
+      background: rgba(9, 9, 26, 0.72);
+      color: #fff;
+      font-size: 1.02rem;
+      font-weight: 800;
+      line-height: 1.2;
+      box-shadow: 0 0 10px rgba(45, 226, 255, 0.25), inset 0 0 14px rgba(45, 226, 255, 0.08);
+      cursor: pointer;
+      transition: transform 0.2s var(--ease-out), background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .food-emoji { font-size: 2.1rem; line-height: 1; }
+    .chip:hover, .food:hover { transform: translateY(-2px); }
+    .chip[aria-pressed="true"], .food[aria-pressed="true"] {
+      border-color: var(--pink);
+      background: rgba(255, 62, 165, 0.18);
+      text-shadow: 0 0 8px rgba(255, 62, 165, 0.8);
+      box-shadow: var(--glow-pink), inset 0 0 14px rgba(255, 62, 165, 0.3);
+      transform: translateY(-2px) scale(1.02);
+    }
+    .food[aria-pressed="true"]::after {
+      content: "✓";
+      position: absolute;
+      top: 8px;
+      right: 9px;
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--toxic);
+      color: #07070f;
+      font-size: 0.78rem;
+      text-shadow: none;
+      box-shadow: 0 0 10px rgba(141, 255, 79, 0.8);
+    }
+    .go-wrap { min-height: 54px; margin-top: 22px; }
+    .btn-go { min-width: 168px; }
+    .btn-go[hidden] { display: none; }
+    .btn-go.is-popping { animation: pop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes pop {
+      from { opacity: 0; transform: scale(0.6); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* step 4: tilted polaroid with a strip of tape */
+    .polaroid {
+      position: relative;
+      width: min(80%, 290px);
+      margin: 26px auto 6px;
+      padding: 9px 9px 30px;
+      border-radius: 3px;
+      background: #f4f0e8;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55), 0 0 26px rgba(255, 62, 165, 0.22);
+      transform: rotate(-3deg);
+    }
+    .polaroid::before {
+      content: "";
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      width: 92px;
+      height: 26px;
+      margin-left: -46px;
+      background: repeating-linear-gradient(45deg, rgba(255, 105, 190, 0.62) 0 6px, rgba(255, 160, 215, 0.5) 6px 12px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      transform: rotate(4deg);
+      clip-path: polygon(0 0, 100% 0, 96% 25%, 100% 50%, 96% 75%, 100% 100%, 0 100%, 4% 75%, 0 50%, 4% 25%);
+    }
+    .polaroid img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      background: #14121f;
+    }
+
+    .summary {
+      max-width: 300px;
+      margin: 20px auto 0;
+      padding: 2px 18px;
+      border: 1px solid rgba(45, 226, 255, 0.45);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      box-shadow: 0 0 14px rgba(45, 226, 255, 0.18), inset 0 0 18px rgba(45, 226, 255, 0.06);
+      text-align: left;
+    }
+    .summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+    }
+    .summary-row + .summary-row { border-top: 1px dashed rgba(45, 226, 255, 0.3); }
+    .summary-label {
+      color: var(--ink-soft);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .summary-value {
+      color: #fff;
+      font-size: 1.08rem;
+      font-weight: 800;
+      text-align: right;
+    }
+    .status {
+      min-height: 1.4em;
+      margin: 12px 0 0;
+      color: #cbffb3;
+      font-size: 0.9rem;
+      text-shadow: 0 0 8px rgba(141, 255, 79, 0.35);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .status.is-shown { opacity: 1; }
+    .signoff {
+      margin: 14px 0 0;
+      font-family: var(--marker);
+      font-size: clamp(1.3rem, 6.2vw, 1.9rem);
+      line-height: 1.2;
+      color: #f2fdff;
+      text-shadow: 0 0 6px rgba(45, 226, 255, 0.85), 0 0 18px rgba(45, 226, 255, 0.45);
+    }
+
+    /* cartoon explosions, smoke puffs and their reduced-motion fade */
+    .fx {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 90;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+    .fx.fx-low { z-index: 55; }
+    .fx > span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+    .fx-flash {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 62, 165, 0.75) 30%, rgba(45, 226, 255, 0.35) 55%, rgba(45, 226, 255, 0) 72%);
+      animation: fx-flash 420ms ease-out forwards;
+    }
+    @keyframes fx-flash {
+      from { transform: translate(-50%, -50%) scale(0.15); opacity: 1; }
+      to { transform: translate(-50%, -50%) scale(calc(1.5 * var(--s, 1))); opacity: 0; }
+    }
+    .fx-burst {
+      width: 128px;
+      height: 128px;
+      background: radial-gradient(circle, #fff7a8 0%, #ffd23f 45%, #ff3ea5 78%);
+      clip-path: polygon(50% 0%, 59% 26%, 82% 8%, 74% 34%, 100% 30%, 79% 50%, 100% 70%, 74% 66%, 82% 92%, 59% 74%, 50% 100%, 41% 74%, 18% 92%, 26% 66%, 0% 70%, 21% 50%, 0% 30%, 26% 34%, 18% 8%, 41% 26%);
+      animation: fx-pop 700ms cubic-bezier(0.2, 1.5, 0.4, 1) forwards;
+    }
+    .fx-word {
+      font-family: var(--marker);
+      font-size: 30px;
+      line-height: 1;
+      white-space: nowrap;
+      color: #ff1fb4;
+      -webkit-text-stroke: 1px #1a0630;
+      text-shadow: 3px 3px 0 #1a0630;
+      animation: fx-pop 700ms cubic-bezier(0.2, 1.5, 0.4, 1) forwards;
+    }
+    @keyframes fx-pop {
+      0% { transform: translate(-50%, -50%) translate(var(--wx, 0px), var(--wy, -60px)) scale(0.1) rotate(-20deg); opacity: 0; }
+      25% { transform: translate(-50%, -50%) translate(var(--wx, 0px), var(--wy, -60px)) scale(calc(1.12 * var(--s, 1))) rotate(-8deg); opacity: 1; }
+      72% { transform: translate(-50%, -50%) translate(var(--wx, 0px), var(--wy, -60px)) scale(var(--s, 1)) rotate(-8deg); opacity: 1; }
+      100% { transform: translate(-50%, -50%) translate(var(--wx, 0px), calc(var(--wy, -60px) - 16px)) scale(var(--s, 1)) rotate(-8deg); opacity: 0; }
+    }
+    .fx-emoji {
+      font-size: 22px;
+      line-height: 1;
+      animation: fx-fly var(--t, 800ms) cubic-bezier(0.12, 0.75, 0.3, 1) forwards;
+    }
+    @keyframes fx-fly {
+      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+      75% { opacity: 1; }
+      100% { transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(var(--s, 1)); opacity: 0; }
+    }
+    .fx-spark {
+      width: 3px;
+      height: 14px;
+      border-radius: 3px;
+      background: var(--c);
+      box-shadow: 0 0 6px var(--c), 0 0 12px var(--c);
+      animation: fx-spark 560ms cubic-bezier(0.1, 0.7, 0.3, 1) forwards;
+    }
+    @keyframes fx-spark {
+      0% { transform: translate(-50%, -50%) rotate(var(--a)) translateY(-6px) scaleY(1.2); opacity: 1; }
+      100% { transform: translate(-50%, -50%) rotate(var(--a)) translateY(calc(-1 * var(--d))) scaleY(0.2); opacity: 0; }
+    }
+    .fx-smoke {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, rgba(235, 228, 255, 0.75), rgba(170, 160, 210, 0.45) 55%, rgba(170, 160, 210, 0) 72%);
+      animation: fx-smoke var(--t, 650ms) ease-out forwards;
+    }
+    @keyframes fx-smoke {
+      0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0.9; }
+      100% { transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) scale(calc(1.6 * var(--s, 1))); opacity: 0; }
+    }
+    .fx-soft {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 62, 165, 0.42), rgba(45, 226, 255, 0.12) 45%, rgba(45, 226, 255, 0) 70%);
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      animation: fx-soft 750ms ease-in-out forwards;
+    }
+    .fx-soft-big { width: 300px; height: 300px; }
+    .fx-soft-smoke {
+      width: 70px;
+      height: 70px;
+      background: radial-gradient(circle, rgba(220, 212, 245, 0.4), rgba(220, 212, 245, 0) 70%);
+    }
+    @keyframes fx-soft {
+      0% { opacity: 0; }
+      40% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+        scroll-behavior: auto !important;
+      }
+      .fx-soft { animation-duration: 750ms !important; }
+    }
+  </style>
+</head>
+<body data-step="ask">
+  <div class="bg" aria-hidden="true"><span class="blob blob-1"></span><span class="blob blob-2"></span><span class="blob blob-3"></span></div>
+  <div class="scene scene-food" aria-hidden="true"><img src="images/teenwolf-bg.webp" width="1280" height="853" alt="" loading="lazy" decoding="async"></div>
+
+  <div class="doodles" aria-hidden="true">
+    <svg class="doodle d-pink" style="top:2%;left:3%;width:46px;height:46px;transform:rotate(-12deg)" viewBox="0 0 48 48"><path d="M24 4 29.6 17.3 44 18.6 32.6 28.1 36.4 42.6 24 34.4 11.2 43 15.4 28.4 4.2 19.2 18.6 17.4Z"/></svg>
+    <svg class="doodle d-blue" style="top:3%;right:5%;width:30px;height:30px" viewBox="0 0 30 30"><path d="M5 6 25 24M24 5 6 25"/></svg>
+    <svg class="doodle d-pink" style="top:11%;right:2%;width:40px;height:37px;transform:rotate(14deg)" viewBox="0 0 48 44"><path d="M24 40C10 30 3 22 5 13 7 5 17 3 23 12 28 3 40 4 43 12 46 22 37 31 24 40ZM24 40l2 3"/></svg>
+    <svg class="doodle d-blue" style="top:24%;left:-14px;width:80px;height:50px;transform:rotate(24deg)" viewBox="0 0 80 50"><path d="M6 40C20 10 45 6 70 18M58 9 71 18 59 27"/></svg>
+    <svg class="doodle d-green" style="top:40%;right:1%;width:34px;height:34px" viewBox="0 0 40 40"><path d="M20 3Q22 18 37 20 22 22 20 37 18 22 3 20 18 18 20 3Z"/></svg>
+    <svg class="doodle d-blue" style="top:55%;left:2%;width:22px;height:22px;transform:rotate(8deg)" viewBox="0 0 48 48"><path d="M24 4 29.6 17.3 44 18.6 32.6 28.1 36.4 42.6 24 34.4 11.2 43 15.4 28.4 4.2 19.2 18.6 17.4Z"/></svg>
+    <svg class="doodle d-pink" style="top:66%;right:-6px;width:40px;height:40px" viewBox="0 0 44 44"><path d="M22 22m0-2a2 2 0 1 1-2 2 5 5 0 1 1 7-4 9 9 0 1 1-14 9 13 13 0 1 1 20-14"/></svg>
+    <svg class="doodle d-blue" style="bottom:20%;left:4%;width:28px;height:28px" viewBox="0 0 30 30"><path d="M5 6 25 24M24 5 6 25"/></svg>
+    <svg class="doodle d-pink" style="bottom:4%;left:3%;width:90px;height:40px;transform:rotate(-6deg)" viewBox="0 0 90 40"><path d="M5 25C12 5 18 35 26 15S38 35 46 14 60 34 68 14 80 30 86 18"/></svg>
+    <svg class="doodle d-green" style="bottom:3%;left:46%;width:26px;height:32px;transform:rotate(10deg)" viewBox="0 0 40 48"><path d="M26 2 10 26H22L16 46 38 18H25L30 2Z"/></svg>
+    <svg class="doodle d-blue" style="bottom:7%;right:6%;width:30px;height:28px;transform:rotate(-10deg)" viewBox="0 0 48 44"><path d="M24 40C10 30 3 22 5 13 7 5 17 3 23 12 28 3 40 4 43 12 46 22 37 31 24 40Z"/></svg>
+  </div>
+
+  <main class="stage">
+    <section class="step step-ask" data-step="ask">
+      <img class="hero" src="images/silco-1.webp" width="728" height="451" alt="" loading="lazy" decoding="async">
+      <div class="card card-bare">
+        <h1 class="title" tabindex="-1">would you like to have lunch with me in march?</h1>
+        <div class="answers" id="answers">
+          <button class="btn btn-primary btn-yes" id="yes" type="button">yes</button>
+          <span class="no-slot" id="noSlot"><button class="btn btn-no" id="no" type="button" tabindex="-1" aria-hidden="true">no</button></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="time" hidden>
+      <div class="card">
+        <div class="card-top"><button class="back" type="button" data-back="ask">← back</button></div>
+        <h2 class="title" tabindex="-1">pick a time</h2>
+        <div class="times" role="group" aria-label="pick a time">
+          <button class="chip" type="button" data-time="6pm" aria-pressed="false">6pm</button>
+          <button class="chip" type="button" data-time="7pm" aria-pressed="false">7pm</button>
+          <button class="chip" type="button" data-time="8pm" aria-pressed="false">8pm</button>
+          <button class="chip" type="button" data-time="9pm" aria-pressed="false">9pm</button>
+        </div>
+        <p class="note">(yes, lunch at dinnertime. don't question it)</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="food" hidden>
+      <div class="card">
+        <div class="card-top"><button class="back" type="button" data-back="time">← back</button></div>
+        <h2 class="title" tabindex="-1">what are we eating?</h2>
+        <div class="foods" role="group" aria-label="what are we eating?">
+          <button class="food" type="button" data-food="sushi at nobu" aria-pressed="false"><span class="food-emoji" aria-hidden="true">🍣</span><span>sushi at nobu</span></button>
+          <button class="food" type="button" data-food="steak at benihana" aria-pressed="false"><span class="food-emoji" aria-hidden="true">🥩</span><span>steak at benihana</span></button>
+          <button class="food" type="button" data-food="burgers" aria-pressed="false"><span class="food-emoji" aria-hidden="true">🍔</span><span>burgers</span></button>
+          <button class="food" type="button" data-food="ice cream for dinner" aria-pressed="false"><span class="food-emoji" aria-hidden="true">🍦</span><span>ice cream for dinner</span></button>
+        </div>
+        <div class="go-wrap"><button class="btn btn-primary btn-go" id="go" type="button" hidden>go</button></div>
+      </div>
+    </section>
+
+    <section class="step" data-step="done" hidden>
+      <div class="card">
+        <div class="card-top"><button class="back" type="button" data-back="food">← back</button></div>
+        <h2 class="title" tabindex="-1">perfect, we'll pick you up on 22 march 2027 💜</h2>
+        <figure class="polaroid" aria-hidden="true"><img src="images/jinx-silco.webp" width="728" height="309" alt="" loading="lazy" decoding="async"></figure>
+        <div class="summary">
+          <div class="summary-row"><span class="summary-label">time</span><span class="summary-value" id="sumTime"></span></div>
+          <div class="summary-row"><span class="summary-label">food</span><span class="summary-value" id="sumFood"></span></div>
+        </div>
+        <p class="status" id="status" aria-live="polite"></p>
+        <p class="signoff">see you soon sunshine</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // web3forms access key: get one free at https://web3forms.com (it emails the key to you).
+    // it only lets this page send email *to you*, so it's fine for it to sit in public html.
+    const WEB3FORMS_ACCESS_KEY = "060da36b-b7f1-4cd8-b267-70808a888448";
+    // formspree fallback: used only when the web3forms key above is empty (or still the placeholder).
+    // make a free form at https://formspree.io and paste its endpoint, e.g. "https://formspree.io/f/abcdwxyz".
+    // if both are empty, nothing is sent and she's asked to screenshot her answers instead.
+    const FORMSPREE_ENDPOINT = "";
+    const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+    const EMAIL_SUBJECT = "she said yes 💜";
+
+    (function () {
+      "use strict";
+
+      const $ = (sel) => document.querySelector(sel);
+      const $$ = (sel) => Array.prototype.slice.call(document.querySelectorAll(sel));
+      const motionQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+      const reducedMotion = () => !!(motionQuery && motionQuery.matches);
+      const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+
+      const steps = {};
+      $$(".step").forEach((el) => { steps[el.dataset.step] = el; });
+      let current = "ask";
+      let stepToken = 0;
+      let stepTimer = 0;
+
+      const picks = { time: null, food: null };
+
+      const yes = $("#yes");
+      const no = $("#no");
+      const noSlot = $("#noSlot");
+      const answers = $("#answers");
+      const go = $("#go");
+      const statusEl = $("#status");
+
+      /* ---------------- steps ---------------- */
+
+      function showStep(name) {
+        const next = steps[name];
+        const prev = steps[current];
+        if (!next || next === prev) return;
+        const token = ++stepToken;
+        clearTimeout(stepTimer);
+        current = name;
+        document.body.setAttribute("data-step", name);
+        if (name !== "ask") setNoAway(true);
+
+        Object.keys(steps).forEach((key) => {
+          const el = steps[key];
+          if (el !== prev && el !== next) {
+            el.hidden = true;
+            el.classList.remove("is-entering", "is-leaving");
+          }
+        });
+
+        const settled = () => {
+          if (token !== stepToken) return;
+          const title = next.querySelector(".title");
+          if (title) {
+            try { title.focus({ preventScroll: true }); } catch (e) { title.focus(); }
+          }
+          if (name === "ask") {
+            revalidateNo();
+            setNoAway(false);
+          }
+        };
+
+        const enter = () => {
+          if (token !== stepToken) return;
+          prev.hidden = true;
+          prev.classList.remove("is-leaving");
+          next.classList.remove("is-leaving");
+          window.scrollTo(0, 0);
+          if (reducedMotion()) {
+            next.classList.remove("is-entering");
+            next.hidden = false;
+            settled();
+            return;
+          }
+          next.classList.add("is-entering");
+          next.hidden = false;
+          void next.offsetWidth;
+          next.classList.remove("is-entering");
+          stepTimer = setTimeout(settled, 360);
+        };
+
+        if (reducedMotion()) {
+          enter();
+        } else {
+          prev.classList.add("is-leaving");
+          stepTimer = setTimeout(enter, 200);
+        }
+      }
+
+      $$("[data-back]").forEach((btn) => {
+        btn.addEventListener("click", () => showStep(btn.dataset.back));
+      });
+
+      /* ---------------- the "no" button that won't be pressed ---------------- */
+
+      const NEAR_PX = 80;      // desktop: jump once the cursor gets this close
+      const FAT_FINGER_PX = 36; // phones: a tap this close to "no" also makes it jump
+      const EDGE = 12;         // keep this far inside the visible viewport
+      const YES_GAP = 24;      // "no" never comes closer than this to "yes": landing, mid-flick or while scrolling
+      const TILT_PAD = 6;      // "no" is drawn tilted up to 6deg, which pokes its corners out a few px
+      const GROW_STEP = 0.12;
+      const GROW_MAX = 1.8;
+
+      const noState = { free: false, x: 0, y: 0, rot: 0, dodges: 0, lastDodge: -1e9 };
+      let lastPointerDown = -1e9;
+
+      function viewportBox() {
+        const vv = window.visualViewport;
+        if (vv && vv.width > 0 && vv.height > 0) {
+          return { left: vv.offsetLeft, top: vv.offsetTop, width: vv.width, height: vv.height };
+        }
+        const de = document.documentElement;
+        return { left: 0, top: 0, width: de.clientWidth || window.innerWidth, height: window.innerHeight || de.clientHeight };
+      }
+
+      function overlaps(a, b) {
+        return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+      }
+
+      function distToRect(x, y, r) {
+        const dx = Math.max(r.left - x, 0, x - r.right);
+        const dy = Math.max(r.top - y, 0, y - r.bottom);
+        return Math.hypot(dx, dy);
+      }
+
+      function currentGrow() {
+        return Math.min(1 + noState.dodges * GROW_STEP, GROW_MAX);
+      }
+
+      // where "no" is (or is heading), ignoring the in-flight animation
+      function noBox() {
+        if (!noState.free) {
+          const r = no.getBoundingClientRect();
+          return { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+        }
+        return { left: noState.x, top: noState.y, right: noState.x + no.offsetWidth, bottom: noState.y + no.offsetHeight };
+      }
+
+      // the area "no" must stay out of: where "yes" is now and where it's growing/gliding to
+      function yesAvoidBox(gap) {
+        const scale = currentGrow() + 0.03; // + the springy overshoot of the grow animation
+        const a = answers.getBoundingClientRect();
+        const w = yes.offsetWidth;
+        const h = yes.offsetHeight;
+        const cx = a.left + yes.offsetLeft + w / 2;
+        const cy = a.top + yes.offsetTop + h / 2;
+        const v = yes.getBoundingClientRect();
+        return {
+          left: Math.min(cx - (w * scale) / 2, v.left) - gap,
+          right: Math.max(cx + (w * scale) / 2, v.right) + gap,
+          top: Math.min(cy - (h * scale) / 2, v.top) - gap,
+          bottom: Math.max(cy + (h * scale) / 2, v.bottom) + gap,
+        };
+      }
+
+      function pageScrolls() {
+        const se = document.scrollingElement || document.documentElement;
+        return se.scrollHeight > window.innerHeight + 1;
+      }
+
+      // "yes" plus the 24px gap. "no" is fixed to the screen but "yes" scrolls with the page,
+      // so when the page can scroll (short landscape screens) "no" keeps out of the whole
+      // up-and-down strip "yes" can slide through, as long as there's room beside it
+      function keepOutBox() {
+        const box = yesAvoidBox(YES_GAP + TILT_PAD);
+        if (pageScrolls()) {
+          const vb = viewportBox();
+          const w = no.offsetWidth;
+          if (box.left - (vb.left + EDGE) >= w || vb.left + vb.width - EDGE - box.right >= w) {
+            box.top = -1e9;
+            box.bottom = 1e9;
+          }
+        }
+        return box;
+      }
+
+      // does a straight flick from where "no" is now to (x, y) stay clear of "yes" the whole way?
+      function flickClear(x, y, keepOut) {
+        const w = no.offsetWidth;
+        const h = no.offsetHeight;
+        const r = no.getBoundingClientRect();
+        const sx = (r.left + r.right) / 2 - w / 2;
+        const sy = (r.top + r.bottom) / 2 - h / 2;
+        // starting inside the gap (e.g. right next to "yes" before the first dodge): just don't cross "yes" itself
+        const startBox = { left: sx, top: sy, right: sx + w, bottom: sy + h };
+        const avoid = overlaps(startBox, keepOut) ? yesAvoidBox(TILT_PAD) : keepOut;
+        for (let i = 1; i < 16; i++) {
+          const px = sx + ((x - sx) * i) / 16;
+          const py = sy + ((y - sy) * i) / 16;
+          if (overlaps({ left: px, top: py, right: px + w, bottom: py + h }, avoid)) return false;
+        }
+        return true;
+      }
+
+      function pickSpot(fromX, fromY) {
+        const vb = viewportBox();
+        const w = no.offsetWidth;
+        const h = no.offsetHeight;
+        const minX = vb.left + EDGE;
+        const minY = vb.top + EDGE;
+        const maxX = Math.max(minX, vb.left + vb.width - w - EDGE);
+        const maxY = Math.max(minY, vb.top + vb.height - h - EDGE);
+        const avoid = keepOutBox();
+        const cur = noBox();
+        const curX = (cur.left + cur.right) / 2;
+        const curY = (cur.top + cur.bottom) / 2;
+        const want = Math.max(110, Math.min(vb.width, vb.height) * 0.42);
+
+        const candidates = [];
+        for (let i = 0; i < 140; i++) {
+          candidates.push([minX + Math.random() * (maxX - minX), minY + Math.random() * (maxY - minY)]);
+        }
+        // a coarse grid as a fallback, so a free spot is always found when one exists
+        for (let gx = 0; gx <= 6; gx++) {
+          for (let gy = 0; gy <= 8; gy++) {
+            candidates.push([minX + ((maxX - minX) * gx) / 6, minY + ((maxY - minY) * gy) / 8]);
+          }
+        }
+
+        // a spot whose flick would cross "yes" is still allowed, but "no" then jumps there instantly
+        let farJump = null;
+        let best = null;
+        let bestScore = -1;
+        let bestClear = null;
+        let bestClearScore = -1;
+        for (let i = 0; i < candidates.length; i++) {
+          const x = candidates[i][0];
+          const y = candidates[i][1];
+          const box = { left: x, top: y, right: x + w, bottom: y + h };
+          if (overlaps(box, avoid)) continue;
+          const fromTouch = distToRect(fromX, fromY, box);
+          const fromCur = Math.hypot(x + w / 2 - curX, y + h / 2 - curY);
+          const clear = flickClear(x, y, avoid);
+          const farEnough = i < 140 && fromTouch >= want && fromCur >= want * 0.75;
+          if (farEnough && clear) return { x, y, animate: true };
+          if (farEnough && !farJump) farJump = { x, y, animate: false };
+          const score = Math.min(fromTouch, fromCur);
+          if (clear && score > bestClearScore) {
+            bestClearScore = score;
+            bestClear = { x, y, animate: true };
+          }
+          if (score > bestScore) {
+            bestScore = score;
+            best = { x, y, animate: false };
+          }
+        }
+        if (farJump) return farJump;
+        if (bestClear) return bestClear;
+        if (best) return best;
+        // viewport too tiny to avoid "yes" at all: take the corner farthest from it
+        const ax = (avoid.left + avoid.right) / 2;
+        const ay = (avoid.top + avoid.bottom) / 2;
+        return { x: ax > vb.left + vb.width / 2 ? minX : maxX, y: ay > vb.top + vb.height / 2 ? minY : maxY, animate: false };
+      }
+
+      function placeNo(x, y, rot, animate) {
+        noState.x = x;
+        noState.y = y;
+        noState.rot = rot;
+        if (!animate) no.style.transition = "none";
+        no.style.transform = "translate3d(" + x.toFixed(1) + "px, " + y.toFixed(1) + "px, 0) rotate(" + rot.toFixed(1) + "deg)";
+        if (!animate) {
+          void no.offsetWidth;
+          no.style.transition = "";
+        }
+      }
+
+      // first dodge: lift "no" out of the layout so it can roam the whole screen
+      function freeNo() {
+        if (noState.free) return;
+        const start = no.getBoundingClientRect();
+        const before = yes.getBoundingClientRect();
+        noState.free = true;
+        document.body.appendChild(no);
+        no.classList.add("is-free");
+        noSlot.hidden = true;
+        placeNo(start.left, start.top, 0, false);
+
+        // "yes" is alone now: let it glide to the middle instead of snapping
+        const after = yes.getBoundingClientRect();
+        const dx = (before.left + before.right) / 2 - (after.left + after.right) / 2;
+        if (dx && !reducedMotion() && "translate" in yes.style) {
+          yes.style.transition = "none";
+          yes.style.translate = dx + "px 0px";
+          void yes.offsetWidth;
+          yes.style.transition = "";
+          yes.style.translate = "0px 0px";
+        }
+      }
+
+      function dodge(fromX, fromY) {
+        if (current !== "ask" || steps.ask.hidden) return;
+        const was = noBox();
+        puff((was.left + was.right) / 2, (was.top + was.bottom) / 2);
+        freeNo();
+        noState.dodges += 1;
+        noState.lastDodge = performance.now();
+        yes.style.setProperty("--grow", currentGrow().toFixed(3));
+        const spot = pickSpot(fromX, fromY);
+        placeNo(spot.x, spot.y, Math.random() * 12 - 6, spot.animate);
+      }
+
+      function maybeDodge(x, y, radius) {
+        if (current !== "ask" || steps.ask.hidden || no.classList.contains("is-away")) return;
+        if (distToRect(x, y, noBox()) < radius) dodge(x, y);
+      }
+
+      function eventPoint(e) {
+        const t = (e.changedTouches && e.changedTouches[0]) || (e.touches && e.touches[0]);
+        if (t) return { x: t.clientX, y: t.clientY };
+        return { x: e.clientX, y: e.clientY };
+      }
+
+      // touching / pressing "no" makes it flee, and the press itself never counts
+      function onNoPress(e) {
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+        const now = performance.now();
+        if (e.type === "pointerdown") {
+          lastPointerDown = now;
+        } else if (now - lastPointerDown < 500) {
+          return; // the touchstart / mousedown twin of a pointerdown we already handled
+        }
+        const p = eventPoint(e);
+        dodge(p.x, p.y);
+      }
+
+      no.addEventListener("pointerdown", onNoPress);
+      no.addEventListener("touchstart", onNoPress, { passive: false });
+      no.addEventListener("mousedown", onNoPress);
+      ["click", "dblclick", "auxclick", "contextmenu", "touchend", "keydown", "keyup", "keypress"].forEach((type) => {
+        no.addEventListener(type, (e) => {
+          if (e.cancelable) e.preventDefault();
+          e.stopImmediatePropagation();
+        }, { capture: true, passive: false });
+      });
+      no.addEventListener("focus", () => no.blur());
+
+      // desktop: run away from the cursor before it arrives
+      if (window.PointerEvent) {
+        document.addEventListener("pointermove", (e) => {
+          if (e.pointerType === "touch") return;
+          maybeDodge(e.clientX, e.clientY, NEAR_PX);
+        }, { passive: true });
+        document.addEventListener("pointerdown", (e) => {
+          if (e.target === no || yes.contains(e.target)) return;
+          maybeDodge(e.clientX, e.clientY, e.pointerType === "mouse" ? NEAR_PX : FAT_FINGER_PX);
+        }, { passive: true, capture: true });
+      } else {
+        document.addEventListener("mousemove", (e) => maybeDodge(e.clientX, e.clientY, NEAR_PX), { passive: true });
+      }
+      no.addEventListener("mouseenter", (e) => maybeDodge(e.clientX, e.clientY, NEAR_PX));
+
+      function setNoAway(away) {
+        if (noState.free) no.classList.toggle("is-away", away);
+      }
+
+      // keep "no" on screen and clear of "yes" when the viewport changes or the page scrolls:
+      // rotation, browser bars, zoom, short landscape screens
+      function revalidateNo() {
+        if (!noState.free || current !== "ask" || steps.ask.hidden) return;
+        const vb = viewportBox();
+        const w = no.offsetWidth;
+        const h = no.offsetHeight;
+        const x = clamp(noState.x, vb.left + EDGE, vb.left + vb.width - w - EDGE);
+        const y = clamp(noState.y, vb.top + EDGE, vb.top + vb.height - h - EDGE);
+        const keepOut = keepOutBox();
+        if (overlaps({ left: x, top: y, right: x + w, bottom: y + h }, keepOut)) {
+          const r = yes.getBoundingClientRect();
+          const spot = pickSpot((r.left + r.right) / 2, (r.top + r.bottom) / 2);
+          placeNo(spot.x, spot.y, noState.rot, spot.animate);
+        } else if (x !== noState.x || y !== noState.y) {
+          placeNo(x, y, noState.rot, flickClear(x, y, keepOut));
+        }
+      }
+
+      let revalidateQueued = false;
+      function queueRevalidate() {
+        if (revalidateQueued) return;
+        revalidateQueued = true;
+        requestAnimationFrame(() => {
+          revalidateQueued = false;
+          revalidateNo();
+        });
+      }
+      window.addEventListener("resize", queueRevalidate);
+      window.addEventListener("orientationchange", queueRevalidate);
+      window.addEventListener("scroll", revalidateNo, { passive: true });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", queueRevalidate);
+        window.visualViewport.addEventListener("scroll", revalidateNo);
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(queueRevalidate);
+
+      /* ---------------- double-tap guard ---------------- */
+
+      // a quick second tap must never count: not on "yes" just after "no" dodged
+      // (the second tap of a double tap on "no" can land on "yes"), and not on
+      // anything while a tapped option moves the page on
+      const TAP_GUARD_MS = 400;
+      let tapsLockedUntil = 0;
+
+      function lockTaps() {
+        tapsLockedUntil = performance.now() + TAP_GUARD_MS;
+      }
+
+      document.addEventListener("click", (e) => {
+        const now = performance.now();
+        const onYes = yes.contains(e.target);
+        if (now < tapsLockedUntil || (onYes && now - noState.lastDodge < TAP_GUARD_MS)) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+        }
+      }, true);
+
+      yes.addEventListener("click", (e) => {
+        lockTaps();
+        boom(e, yes);
+        showStep("time");
+      });
+
+      /* ---------------- picks ---------------- */
+
+      function markPicked(selector, chosen) {
+        $$(selector).forEach((el) => el.setAttribute("aria-pressed", el === chosen ? "true" : "false"));
+      }
+
+      let timeTimer = 0;
+      $$("[data-time]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          if (current !== "time") return;
+          lockTaps();
+          boom(e, btn);
+          picks.time = btn.dataset.time;
+          markPicked("[data-time]", btn);
+          clearTimeout(timeTimer);
+          timeTimer = setTimeout(() => {
+            if (current === "time") showStep("food");
+          }, reducedMotion() ? 120 : 280);
+        });
+      });
+
+      $$("[data-food]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          if (current !== "food") return;
+          lockTaps();
+          boom(e, btn);
+          picks.food = btn.dataset.food;
+          markPicked("[data-food]", btn);
+          if (go.hidden) {
+            go.hidden = false;
+            go.classList.remove("is-popping");
+            void go.offsetWidth;
+            go.classList.add("is-popping");
+            if (go.scrollIntoView) go.scrollIntoView({ block: "nearest", behavior: reducedMotion() ? "auto" : "smooth" });
+          }
+        });
+      });
+
+      go.addEventListener("click", (e) => {
+        if (current !== "food" || !picks.time || !picks.food) return;
+        lockTaps();
+        const time = picks.time;
+        const food = picks.food;
+        $("#sumTime").textContent = time;
+        $("#sumFood").textContent = food;
+        sendAnswers(time, food);
+        boom(e, go, true);
+        showStep("done");
+      });
+
+      /* ---------------- email (web3forms) ---------------- */
+
+      const STATUS_TEXT = {
+        sent: "your answers have been sent 💌",
+        failed: "screenshot this and send it to me 😌",
+      };
+      let sendSeq = 0;
+      let lastAttempt = null; // { key, state: "pending" | "sent" | "failed", promise }
+
+      function setStatus(kind) {
+        statusEl.textContent = kind ? STATUS_TEXT[kind] : "";
+        statusEl.classList.toggle("is-shown", !!kind);
+      }
+
+      function sendAnswers(time, food) {
+        const key = time + "\n" + food;
+        const seq = ++sendSeq;
+        if (lastAttempt && lastAttempt.key === key && lastAttempt.state === "sent") {
+          setStatus("sent"); // same picks already in the inbox: nothing new to send
+          return;
+        }
+        setStatus(null);
+        if (!(lastAttempt && lastAttempt.key === key && lastAttempt.state === "pending")) {
+          const attempt = { key, state: "pending", promise: null };
+          attempt.promise = postAnswers(time, food).then((ok) => {
+            attempt.state = ok ? "sent" : "failed";
+            return ok;
+          });
+          lastAttempt = attempt;
+        }
+        lastAttempt.promise.then((ok) => {
+          if (seq === sendSeq) setStatus(ok ? "sent" : "failed");
+        });
+      }
+
+      function web3formsKey() {
+        const key = String(WEB3FORMS_ACCESS_KEY || "").trim();
+        return key === "YOUR_ACCESS_KEY_HERE" ? "" : key;
+      }
+
+      // utc on purpose: a local time zone would hint at where she is
+      function timestamp() {
+        return new Date().toISOString().slice(0, 16).replace("T", " ") + " utc";
+      }
+
+      // only her two picks and a timestamp leave the page: via web3forms, or formspree if there's no web3forms key
+      function postAnswers(time, food) {
+        if (!window.fetch || !window.FormData) return Promise.resolve(false);
+        const key = web3formsKey();
+        const formspree = String(FORMSPREE_ENDPOINT || "").trim();
+        const body = new FormData();
+        let url;
+        let succeeded;
+        if (key) {
+          url = WEB3FORMS_ENDPOINT;
+          body.append("access_key", key);
+          body.append("subject", EMAIL_SUBJECT);
+          body.append("from_name", "a very important question");
+          succeeded = (res, data) => res.ok && !!data && data.success === true;
+        } else if (formspree) {
+          url = formspree;
+          body.append("_subject", EMAIL_SUBJECT);
+          succeeded = (res, data) => res.ok && !!data && !data.errors;
+        } else {
+          return Promise.resolve(false);
+        }
+        body.append("time", time);
+        body.append("food", food);
+        body.append("timestamp", timestamp());
+        const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+        const timer = ctrl ? setTimeout(() => ctrl.abort(), 15000) : 0;
+        let request;
+        try {
+          request = fetch(url, {
+            method: "POST",
+            body: body,
+            headers: { Accept: "application/json" },
+            signal: ctrl ? ctrl.signal : undefined,
+          });
+        } catch (e) {
+          request = Promise.reject(e);
+        }
+        return request
+          .then((res) => res.json().then((data) => succeeded(res, data), () => false))
+          .catch(() => false)
+          .then((ok) => {
+            clearTimeout(timer);
+            return ok;
+          });
+      }
+
+      /* ---------------- cartoon explosions (purely cosmetic) ---------------- */
+
+      const stage = $(".stage");
+      const FX_EMOJI = ["💥", "✨", "💣", "🎀"];
+      const FX_COLORS = ["#ff3ea5", "#2de2ff", "#ff2bd6", "#8dff4f", "#ffffff"];
+      let liveFx = 0;
+
+      // where the finger/cursor hit; keyboard presses explode from the button's centre
+      function fxPoint(e, el) {
+        if (e && e.detail !== 0 && (e.clientX || e.clientY)) return { x: e.clientX, y: e.clientY };
+        const r = el.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      }
+
+      function fxLayer(x, y, ms, low) {
+        const layer = document.createElement("div");
+        layer.className = low ? "fx fx-low" : "fx";
+        layer.setAttribute("aria-hidden", "true");
+        layer.style.left = x.toFixed(1) + "px";
+        layer.style.top = y.toFixed(1) + "px";
+        document.body.appendChild(layer);
+        liveFx += 1;
+        setTimeout(() => {
+          layer.remove();
+          liveFx -= 1;
+        }, ms);
+        return layer;
+      }
+
+      function fxBit(layer, cls, text, vars) {
+        const el = document.createElement("span");
+        el.className = cls;
+        if (text) el.textContent = text;
+        Object.keys(vars || {}).forEach((k) => el.style.setProperty(k, vars[k]));
+        layer.appendChild(el);
+      }
+
+      function shake(big) {
+        stage.classList.remove("is-shaking", "is-shaking-big");
+        void stage.offsetWidth;
+        stage.classList.add(big ? "is-shaking-big" : "is-shaking");
+      }
+      stage.addEventListener("animationend", (e) => {
+        if (e.target === stage) stage.classList.remove("is-shaking", "is-shaking-big");
+      });
+
+      function boom(e, el, big) {
+        const p = fxPoint(e, el);
+        if (reducedMotion()) {
+          fxBit(fxLayer(p.x, p.y, 900), big ? "fx-soft fx-soft-big" : "fx-soft");
+          return;
+        }
+        if (liveFx > 16) return;
+        const s = big ? 1.8 : 1;
+        const layer = fxLayer(p.x, p.y, big ? 1500 : 1100);
+        const vw = viewportBox();
+        const half = 66 * s;
+        const wx = clamp(p.x, vw.left + half, vw.left + vw.width - half) - p.x;
+        const wy = Math.max(-60 * s, vw.top + half - p.y);
+        const pos = { "--s": s, "--wx": wx.toFixed(1) + "px", "--wy": wy.toFixed(1) + "px" };
+        fxBit(layer, "fx-flash", "", { "--s": s });
+        fxBit(layer, "fx-burst", "", pos);
+        fxBit(layer, "fx-word", big || Math.random() < 0.5 ? "kaboom!" : "boom!", pos);
+        const emojis = big ? 26 : 12;
+        for (let i = 0; i < emojis; i++) {
+          const a = Math.random() * Math.PI * 2;
+          const d = (55 + Math.random() * 75) * s;
+          fxBit(layer, "fx-emoji", FX_EMOJI[i % FX_EMOJI.length], {
+            "--dx": (Math.cos(a) * d).toFixed(1) + "px",
+            "--dy": (Math.sin(a) * d - 18).toFixed(1) + "px",
+            "--rot": ((Math.random() - 0.5) * 220).toFixed(0) + "deg",
+            "--s": ((0.8 + Math.random() * 0.6) * (big ? 1.25 : 1)).toFixed(2),
+            "--t": (650 + Math.random() * 350).toFixed(0) + "ms",
+          });
+        }
+        const sparks = big ? 30 : 16;
+        for (let i = 0; i < sparks; i++) {
+          fxBit(layer, "fx-spark", "", {
+            "--a": ((i / sparks) * 360 + Math.random() * 10).toFixed(0) + "deg",
+            "--d": ((40 + Math.random() * 60) * s).toFixed(0) + "px",
+            "--c": FX_COLORS[i % FX_COLORS.length],
+          });
+        }
+        shake(big);
+      }
+
+      // a little puff of smoke left behind where "no" used to be
+      function puff(x, y) {
+        if (liveFx > 16) return;
+        const layer = fxLayer(x, y, 900, true);
+        if (reducedMotion()) {
+          fxBit(layer, "fx-soft fx-soft-smoke");
+          return;
+        }
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * Math.PI * 2 + Math.random() * 0.6;
+          fxBit(layer, "fx-smoke", "", {
+            "--dx": (Math.cos(a) * (14 + Math.random() * 16)).toFixed(1) + "px",
+            "--dy": (Math.sin(a) * (10 + Math.random() * 12) - 12).toFixed(1) + "px",
+            "--s": (0.8 + Math.random() * 0.7).toFixed(2),
+            "--t": (520 + Math.random() * 240).toFixed(0) + "ms",
+          });
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
